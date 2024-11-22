@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Supporte</name>
+    </assembly>
+    <members>
+        <member name="P:Suporte.Controllers.LoginRequest.Pass">
+            <summary>
+            Password should be an hash (MD5 or SHA-256)
+            </summary>
+        </member>
+        <member name="P:Suporte.Services.RegisterUserInfo.Username">
+            <summary>
+            The username of the user. Must be at least 5 characters long and contain only letters and numbers.
+            </summary>
+        </member>
+        <member name="P:Suporte.Services.RegisterUserInfo.DisplayName">
+            <summary>
+            An optional display name for the user. Must be at least 3 characters long.
+            </summary>
+        </member>
+        <member name="P:Suporte.Services.RegisterUserInfo.Email">
+            <summary>
+            The user's email address. Must be valid and at least 6 characters long.
+            </summary>
+        </member>
+        <member name="P:Suporte.Services.RegisterUserInfo.Number">
+            <summary>
+            An optional phone number for the user.
+            </summary>
+        </member>
+        <member name="P:Suporte.Services.RegisterUserInfo.CountryCode">
+            <summary>
+            Optional country code for the user. (+44, +351, etc...)
+            </summary>        
+        </member>
+        <member name="P:Suporte.Services.RegisterUserInfo.Country">
+            <summary>
+            Optional country abbreviation (GB, PT, etc...)
+            </summary>        
+        </member>
+        <member name="P:Suporte.Services.RegisterUserInfo.Password">
+            <summary>
+            The hashed password of the user. 
+            Must be a valid MD5 (32 hexadecimal characters) or SHA-256 (64 hexadecimal characters) hash.
+            </summary>
+        </member>
+    </members>
+</doc>

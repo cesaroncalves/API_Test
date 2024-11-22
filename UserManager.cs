@@ -136,7 +136,8 @@ namespace Suporte.Services
         }
 
         public async Task<UserInfo> FindByEmailAsync(string email)
-        {if (_connection.State != System.Data.ConnectionState.Open) {                
+        {
+            if (_connection.State != System.Data.ConnectionState.Open) {                
                 _connection.ConnectionString = GlobalVariables.ConnectionString;
                 await _connection.OpenAsync();
             }
@@ -181,34 +182,35 @@ namespace Suporte.Services
 
         public async Task<string> ValidatePasswordResetTokenAsync(string token)
         {
-            // Hash the provided token for comparison
-            var tokenHash = HashToken(token);
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-
-                string sql = @"
-                    SELECT UserId 
-                    FROM PasswordResetTokens 
-                    WHERE TokenHash = @TokenHash
-                      AND ExpirationTime > @CurrentTime
-                      AND IsInvalidated = 0";
-
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@TokenHash", tokenHash);
-                    command.Parameters.AddWithValue("@CurrentTime", DateTime.UtcNow);
-
-                    var result = await command.ExecuteScalarAsync();
-
-                    if (result != null)
-                    {
-                        return result.ToString();
-                    }
-                }
+            if (_connection.State != System.Data.ConnectionState.Open) {                
+                _connection.ConnectionString = GlobalVariables.ConnectionString;
+                await _connection.OpenAsync();
             }
 
+            var tokenHash = AuthController.ComputePBKDF2Hash(token);
+            
+            await _connection.OpenAsync();
+
+            string sql = @"
+                SELECT UserId 
+                FROM PasswordResetTokens 
+                WHERE TokenHash = @TokenHash
+                  AND ExpirationTime > @CurrentTime
+                  AND IsInvalidated = 0";
+
+            using (var command = new SqlCommand(sql, _connection))
+            {
+                command.Parameters.AddWithValue("@TokenHash", tokenHash);
+                command.Parameters.AddWithValue("@CurrentTime", DateTime.UtcNow);
+
+                var result = await command.ExecuteScalarAsync();
+
+                if (result != null)
+                {
+                    return result.ToString();
+                }
+            }
+            
             return null;
         }
 
